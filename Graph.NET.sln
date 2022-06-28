@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graph.NET.Core", "Graph.NET.Core\Graph.NET.Core.csproj", "{B4020FF3-B43C-4156-9F39-1DF322446F15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graph.NET.Tests", "Graph.NET.Tests\Graph.NET.Tests.csproj", "{043750BA-051F-4462-A1EC-FCE14D28D321}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4020FF3-B43C-4156-9F39-1DF322446F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4020FF3-B43C-4156-9F39-1DF322446F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4020FF3-B43C-4156-9F39-1DF322446F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4020FF3-B43C-4156-9F39-1DF322446F15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{043750BA-051F-4462-A1EC-FCE14D28D321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{043750BA-051F-4462-A1EC-FCE14D28D321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{043750BA-051F-4462-A1EC-FCE14D28D321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{043750BA-051F-4462-A1EC-FCE14D28D321}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA504CA1-B915-4D04-99D9-4F439B0AD023}
+	EndGlobalSection
+EndGlobal
