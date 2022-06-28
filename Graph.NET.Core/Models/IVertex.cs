@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Graph.NET.Core.Models
 {
-    public interface IVertex
+    public interface IVertex<TValue>
     {
+        string? Name { get; set; }
+
+        TValue? Content { get; set; }
+
     }
 }
