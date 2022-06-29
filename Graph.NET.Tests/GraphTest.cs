@@ -157,5 +157,20 @@ namespace Graph.NET.Tests
             Debug.WriteLine(graph.PrintGraph());
             Debug.WriteLine(visitor.Visited);
         }
+
+        [Test]
+        public void TestCycles()
+        {
+            for (int i = 0; i < 3; i++)
+                graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
+            Assert.That(graph.Vertices.Count(), Is.EqualTo(3));
+            DFSVisitor visitor = new();
+            Assert.IsTrue(graph.AddEdge("A", "B"));
+            Assert.IsTrue(graph.AddEdge("B", "C"));
+            Assert.IsTrue(graph.AddEdge("C", "A"));
+            Assert.That(graph.Edges.Count(), Is.EqualTo(3));
+            Assert.IsTrue(graph.CheckCycles());
+            Assert.IsTrue(graph.IsCyclic);
+        }
     }
 }
