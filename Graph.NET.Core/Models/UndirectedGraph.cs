@@ -1,4 +1,5 @@
 ﻿using Graph.NET.Core.Exceptions;
+using Graph.NET.Core.Visitors;
 using System.Text;
 
 namespace Graph.NET.Core.Models
@@ -90,5 +91,7 @@ namespace Graph.NET.Core.Models
             return builder.ToString();
 
         }
+
+        public void AcceptVisitor(IVisitor visitor) => visitor.Visit(this);
     }
 }

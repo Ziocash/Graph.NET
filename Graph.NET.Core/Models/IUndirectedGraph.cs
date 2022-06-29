@@ -1,4 +1,6 @@
-﻿namespace Graph.NET.Core.Models
+﻿using Graph.NET.Core.Visitors;
+
+namespace Graph.NET.Core.Models
 {
     public interface IUndirectedGraph<TValue>
     {
@@ -29,6 +31,8 @@
         bool CutEdges(IVertex<TValue> source);
 
         string PrintGraph();
+
+        void AcceptVisitor(IVisitor visitor);
 
         public int MaxEdges { get; }
     }
