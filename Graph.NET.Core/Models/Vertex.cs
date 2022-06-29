@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Graph.NET.Core.Models.Enums;
+using Graph.NET.Core.Visitors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,6 @@ namespace Graph.NET.Core.Models
 
         public string? Name { get; set; }
         public TValue? Content { get; set; }
-
+        public VertexColor Color { get; set; } = VertexColor.White;
     }
 }
