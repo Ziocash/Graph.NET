@@ -4,6 +4,8 @@ namespace Graph.NET.Core.Models
 {
     public interface IUndirectedGraph<TValue>
     {
+        public void ResetColors();
+
         IVertex<TValue>? Root { get; }
 
         IEnumerable<IVertex<TValue>> Vertices { get; }

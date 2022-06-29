@@ -9,7 +9,7 @@ namespace Graph.NET.Core.Models
     {
         public IVertex<TValue>? Root { get => _vertices.FirstOrDefault(); }
         public IEnumerable<IVertex<TValue>> Vertices { get => _vertices; }
-        public int MaxEdges { get => (_vertices.Count * (_vertices.Count - 1)) / 2; }
+        public int MaxEdges => (_vertices.Count * (_vertices.Count - 1)) / 2;
 
         public IEnumerable<IEdge<TValue>> Edges { get => _edges; }
 
@@ -99,6 +99,7 @@ namespace Graph.NET.Core.Models
 
         public bool CheckCycles()
         {
+            ResetColors();
             foreach (IVertex<TValue> vertex in _vertices)
                 if (vertex.Color == VertexColor.White && CheckCyclesRic(vertex))
                     return true;
@@ -138,6 +139,12 @@ namespace Graph.NET.Core.Models
                     vertices.Add(edge.Source);
             }
             return vertices;
+        }
+
+        public void ResetColors()
+        {
+            foreach (var vertex in _vertices)
+                vertex.Color = VertexColor.White;
         }
     }
 }
