@@ -12,32 +12,26 @@ namespace Graph.NET.Core.Visitors
     {
         public string? Visited { get; private set; }
 
+        private StringBuilder _stringBuilder = new();
+
         public void Visit<TValue>(IUndirectedGraph<TValue> graph)
         {
-            Stack<IVertex<TValue>> stack = new();
+            DFSVisit(graph, graph.Root);
+        }
+
+        private void DFSVisit<TValue>(IUndirectedGraph<TValue> graph, IVertex<TValue> vertex)
+        {
             List<IVertex<TValue>> parents = new();
-            StringBuilder stringBuilder = new();
-            graph.Root.Color = VertexColor.Gray;
-            stack.Push(graph.Root);
-            while (stack.Count > 0)
-            {
-                stringBuilder.AppendLine($"Visiting node {stack.Peek().Name}");
-                foreach (var edge in graph.Edges)
+            vertex.Color = VertexColor.Gray;
+            _stringBuilder.AppendLine($"Visiting node {vertex.Name}");
+            foreach (var adj in graph.AdjacentsTo(vertex))
+                if(adj.Color == VertexColor.White)
                 {
-                    if ((edge.Source.Name == stack.Peek().Name || edge.Destination.Name == stack.Peek().Name) && edge.Destination.Color == VertexColor.White)
-                    {
-                        edge.Destination.Color = VertexColor.Gray;
-                        if (!parents.Contains(stack.Peek()))
-                            parents.Add(stack.Peek());
-                        stack.Push(edge.Destination);
-                        stringBuilder.AppendLine($"Has adjacent vertex {edge.Destination.Name}.");
-                    }
+                    parents.Add(vertex);
+                    DFSVisit(graph, adj);
                 }
-                var vertex = stack.Pop();
-                vertex.Color = VertexColor.Black;
-                stringBuilder.AppendLine($"No unvisited vertices near.");
-            }
-            Visited = stringBuilder.ToString();
+            vertex.Color = VertexColor.Black;
+            Visited = _stringBuilder.ToString();
         }
     }
 }

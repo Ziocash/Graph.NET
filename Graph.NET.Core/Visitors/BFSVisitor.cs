@@ -14,6 +14,7 @@ namespace Graph.NET.Core.Visitors
 
         public void Visit<TValue>(IUndirectedGraph<TValue> graph)
         {
+            graph.ResetColors();
             List<IVertex<TValue>> parents = new();
             Queue<IVertex<TValue>> queue = new();
             StringBuilder stringBuilder = new();
@@ -23,15 +24,15 @@ namespace Graph.NET.Core.Visitors
             {
                 var head = queue.ElementAt(0);
                 stringBuilder.AppendLine($"Visiting node {head.Name}");
-                foreach (var edge in graph.Edges)
+                foreach (var adj in graph.AdjacentsTo(head))
                 {
-                    if (edge.Source.Name == head.Name && edge.Destination.Color == VertexColor.White)
+                    if (adj.Color == VertexColor.White)
                     {   
-                        edge.Destination.Color = VertexColor.Gray;
+                        adj.Color = VertexColor.Gray;
                         if(!parents.Contains(head))
                             parents.Add(head);
-                        queue.Enqueue(edge.Destination);
-                        stringBuilder.AppendLine($"Visited node {edge.Source.Name}, has adjacent vertex {edge.Destination.Name}.");
+                        queue.Enqueue(adj);
+                        stringBuilder.AppendLine($"Visited node {head.Name}, has adjacent vertex {adj.Name}.");
                     }
                 }
                 var vertex = queue.Dequeue();
