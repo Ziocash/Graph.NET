@@ -18,6 +18,8 @@
 
         bool AddEdge(IVertex<TValue> source, IVertex<TValue> destination);
 
+        bool AddEdge(string sourceName, string destinationName);
+
         bool RemoveEdge(TValue sourceContent, TValue destinationContent);
 
         bool RemoveEdge(string sourceName, string destinationName);

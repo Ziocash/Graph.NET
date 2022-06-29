@@ -73,9 +73,15 @@ namespace Graph.NET.Core.Models
         public string PrintGraph()
         {
             StringBuilder builder = new();
+
+            builder.AppendLine("Edges are double due to undirected graph\n");
+
             builder.AppendLine("Edges:");
             foreach (IEdge<TValue> edge in _edges)
+            {
                 builder.AppendLine($"{edge.Source.Name}--{edge.Destination.Name}");
+                builder.AppendLine($"{edge.Destination.Name}--{edge.Source.Name}");
+            }
 
             builder.AppendLine("Vertices:");
             foreach(IVertex<TValue> vertex in _vertices)
