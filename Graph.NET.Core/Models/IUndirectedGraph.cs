@@ -34,6 +34,12 @@ namespace Graph.NET.Core.Models
 
         void AcceptVisitor(IVisitor visitor);
 
-        public int MaxEdges { get; }
+        bool CheckCycles();
+
+        IEnumerable<IVertex<TValue>> AdjacentsTo(IVertex<TValue> vertex);
+
+        bool IsCyclic { get; }
+
+        int MaxEdges { get; }
     }
 }

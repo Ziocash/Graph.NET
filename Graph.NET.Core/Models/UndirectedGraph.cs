@@ -1,4 +1,5 @@
 ﻿using Graph.NET.Core.Exceptions;
+using Graph.NET.Core.Models.Enums;
 using Graph.NET.Core.Visitors;
 using System.Text;
 
@@ -11,6 +12,8 @@ namespace Graph.NET.Core.Models
         public int MaxEdges { get => (_vertices.Count * (_vertices.Count - 1)) / 2; }
 
         public IEnumerable<IEdge<TValue>> Edges { get => _edges; }
+
+        public bool IsCyclic => CheckCycles();
 
         private List<IVertex<TValue>> _vertices;
 
@@ -93,5 +96,48 @@ namespace Graph.NET.Core.Models
         }
 
         public void AcceptVisitor(IVisitor visitor) => visitor.Visit(this);
+
+        public bool CheckCycles()
+        {
+            foreach (IVertex<TValue> vertex in _vertices)
+                if (vertex.Color == VertexColor.White && CheckCyclesRic(vertex))
+                    return true;
+            return false;
+            
+        }
+
+        private bool CheckCyclesRic(IVertex<TValue> vertex)
+        {
+            List<IVertex<TValue>> parents = new();
+            vertex.Color = VertexColor.Gray;
+            
+            foreach (var adjacent in AdjacentsTo(vertex))
+            {
+                if (adjacent.Color == VertexColor.White)
+                {
+                    parents.Add(adjacent);
+                    if (CheckCyclesRic(adjacent))
+                        return true;
+                }
+                else if (vertex.Name != (parents.Count > 0 ? parents.Last().Name : vertex.Name))
+                    return true;
+                adjacent.Color = VertexColor.Black;
+            }
+            return false;
+        }
+
+        public IEnumerable<IVertex<TValue>> AdjacentsTo(IVertex<TValue> vertex)
+        {
+            List<IVertex<TValue>> vertices = new();
+            foreach(IEdge<TValue> edge in _edges)
+            {
+
+                if (edge.Source.Name == vertex.Name)
+                    vertices.Add(edge.Destination);
+                if (edge.Destination.Name == vertex.Name)
+                    vertices.Add(edge.Source);
+            }
+            return vertices;
+        }
     }
 }
