@@ -1,4 +1,6 @@
 using Graph.NET.Core.Models;
+using Graph.NET.Core.Models.Enums;
+using Graph.NET.Core.Visitors;
 using System.Diagnostics;
 
 namespace Graph.NET.Tests
@@ -104,5 +106,56 @@ namespace Graph.NET.Tests
             Debug.WriteLine(graph.PrintGraph());
         }
 
+        [Test]
+        public void TestBFSVisitor()
+        {
+            for (int i = 0; i < 8; i++)
+                graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
+            Assert.That(graph.Vertices.Count(), Is.EqualTo(8));
+            BFSVisitor visitor = new();
+            Assert.IsTrue(graph.AddEdge("A", "B"));
+            Assert.IsTrue(graph.AddEdge("A", "D"));
+            Assert.IsTrue(graph.AddEdge("B", "C"));
+            Assert.IsTrue(graph.AddEdge("B", "F"));
+            Assert.IsTrue(graph.AddEdge("C", "E"));
+            Assert.IsTrue(graph.AddEdge("D", "C"));
+            Assert.IsTrue(graph.AddEdge("D", "H"));
+            Assert.IsTrue(graph.AddEdge("E", "F"));
+            Assert.IsTrue(graph.AddEdge("E", "H"));
+            Assert.IsTrue(graph.AddEdge("F", "G"));
+            Assert.IsTrue(graph.AddEdge("H", "G"));
+            Assert.That(graph.Edges.Count(), Is.EqualTo(11));
+            graph.AcceptVisitor(visitor);
+            Assert.That(visitor.Visited, Is.Not.Null);
+            Debug.WriteLine(graph.PrintGraph());
+            Debug.WriteLine(visitor.Visited);
+        }
+
+        [Test]
+        public void TestDFSVisitor()
+        {
+            for (int i = 0; i < 8; i++)
+                graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
+            Assert.That(graph.Vertices.Count(), Is.EqualTo(8));
+            DFSVisitor visitor = new();
+            Assert.IsTrue(graph.AddEdge("A", "B"));
+            Assert.IsTrue(graph.AddEdge("B", "C"));
+            Assert.IsTrue(graph.AddEdge("C", "D"));
+            Assert.IsTrue(graph.AddEdge("D", "F"));      
+            Assert.IsTrue(graph.AddEdge("F", "E"));            
+            Assert.IsTrue(graph.AddEdge("H", "E"));
+            Assert.IsTrue(graph.AddEdge("A", "G"));
+            Assert.IsTrue(graph.AddEdge("G", "C"));
+            Assert.IsTrue(graph.AddEdge("D", "H"));
+            Assert.IsTrue(graph.AddEdge("B", "H"));
+            Assert.IsTrue(graph.AddEdge("G", "F"));
+            Assert.That(graph.Edges.Count(), Is.EqualTo(11));
+            graph.AcceptVisitor(visitor);
+            Assert.That(visitor.Visited, Is.Not.Null);
+            foreach (var vertex in graph.Vertices)
+                Assert.That(vertex.Color, Is.EqualTo(VertexColor.Black));
+            Debug.WriteLine(graph.PrintGraph());
+            Debug.WriteLine(visitor.Visited);
+        }
     }
 }
