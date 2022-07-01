@@ -1,6 +1,6 @@
 ﻿using Graph.NET.Core.Visitors;
 
-namespace Graph.NET.Core.Models
+namespace Graph.NET.Core.Models.Undirected
 {
     public interface IUndirectedGraph<TValue>
     {
@@ -34,7 +34,7 @@ namespace Graph.NET.Core.Models
 
         string PrintGraph();
 
-        void AcceptVisitor(IVisitor visitor);
+        void AcceptVisitor(IUndirectedGraphVisitor visitor);
 
         bool CheckCycles();
 

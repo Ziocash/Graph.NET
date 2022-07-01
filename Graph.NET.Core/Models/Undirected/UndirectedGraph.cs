@@ -3,13 +3,13 @@ using Graph.NET.Core.Models.Enums;
 using Graph.NET.Core.Visitors;
 using System.Text;
 
-namespace Graph.NET.Core.Models
+namespace Graph.NET.Core.Models.Undirected
 {
     public class UndirectedGraph<TValue> : IUndirectedGraph<TValue>
     {
         public IVertex<TValue>? Root { get => _vertices.FirstOrDefault(); }
         public IEnumerable<IVertex<TValue>> Vertices { get => _vertices; }
-        public int MaxEdges => (_vertices.Count * (_vertices.Count - 1)) / 2;
+        public int MaxEdges => _vertices.Count * (_vertices.Count - 1) / 2;
 
         public IEnumerable<IEdge<TValue>> Edges { get => _edges; }
 
@@ -31,11 +31,23 @@ namespace Graph.NET.Core.Models
             return _vertices.Contains(vertex);
         }
 
-        public bool RemoveVertex(IVertex<TValue> vertex) => _vertices.Remove(_vertices.Find(v => v.Name == vertex.Name && v.Content.Equals(vertex.Content)));
+        public bool RemoveVertex(IVertex<TValue> vertex)
+        {
+            CutEdges(vertex);
+            return _vertices.Remove(_vertices.Find(v => v.Name == vertex.Name && v.Content.Equals(vertex.Content)));
+        }
 
-        public bool RemoveVertex(string name) => _vertices.Remove(_vertices.Find(v => v.Name == name));
+        public bool RemoveVertex(string name)
+        {
+            CutEdges(_vertices.Find(v => v.Name == name));
+            return _vertices.Remove(_vertices.Find(v => v.Name == name));
+        }
 
-        public bool RemoveVertex(TValue content) => _vertices.Remove(_vertices.Find(v => v.Content.Equals(content)));
+        public bool RemoveVertex(TValue content)
+        {
+            CutEdges(_vertices.Find(v => v.Content.Equals(content)));
+            return _vertices.Remove(_vertices.Find(v => v.Content.Equals(content)));
+        }
 
         public bool AddEdge(IVertex<TValue> source, IVertex<TValue> destination)
         {
@@ -69,7 +81,7 @@ namespace Graph.NET.Core.Models
         public bool CutEdges(IVertex<TValue> source)
         {
             foreach (IEdge<TValue> edge in _edges)
-                if (edge.Source == source)
+                if (edge.Source.Name == source.Name || edge.Destination.Name == source.Name)
                     return _edges.Remove(edge);
             return false;
         }
@@ -88,14 +100,14 @@ namespace Graph.NET.Core.Models
             }
 
             builder.AppendLine("Vertices:");
-            foreach(IVertex<TValue> vertex in _vertices)
+            foreach (IVertex<TValue> vertex in _vertices)
                 builder.AppendLine($"{vertex.Name} - {vertex.Content.ToString()}");
 
             return builder.ToString();
 
         }
 
-        public void AcceptVisitor(IVisitor visitor) => visitor.Visit(this);
+        public void AcceptVisitor(IUndirectedGraphVisitor visitor) => visitor.Visit(this);
 
         public bool CheckCycles()
         {
@@ -104,14 +116,14 @@ namespace Graph.NET.Core.Models
                 if (vertex.Color == VertexColor.White && CheckCyclesRic(vertex))
                     return true;
             return false;
-            
+
         }
 
         private bool CheckCyclesRic(IVertex<TValue> vertex)
         {
             List<IVertex<TValue>> parents = new();
             vertex.Color = VertexColor.Gray;
-            
+
             foreach (var adjacent in AdjacentsTo(vertex))
             {
                 if (adjacent.Color == VertexColor.White)
@@ -130,7 +142,7 @@ namespace Graph.NET.Core.Models
         public IEnumerable<IVertex<TValue>> AdjacentsTo(IVertex<TValue> vertex)
         {
             List<IVertex<TValue>> vertices = new();
-            foreach(IEdge<TValue> edge in _edges)
+            foreach (IEdge<TValue> edge in _edges)
             {
 
                 if (edge.Source.Name == vertex.Name)
