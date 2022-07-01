@@ -1,11 +1,12 @@
 using Graph.NET.Core.Models;
 using Graph.NET.Core.Models.Enums;
+using Graph.NET.Core.Models.Undirected;
 using Graph.NET.Core.Visitors;
 using System.Diagnostics;
 
 namespace Graph.NET.Tests
 {
-    public class Tests
+    public class UndirectedGraphTests
     {
         private UndirectedGraph<DateTime> graph;
         [SetUp]
@@ -112,7 +113,7 @@ namespace Graph.NET.Tests
             for (int i = 0; i < 8; i++)
                 graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
             Assert.That(graph.Vertices.Count(), Is.EqualTo(8));
-            BFSVisitor visitor = new();
+            UndirectedBFSVisitor visitor = new();
             Assert.IsTrue(graph.AddEdge("A", "B"));
             Assert.IsTrue(graph.AddEdge("A", "D"));
             Assert.IsTrue(graph.AddEdge("B", "C"));
@@ -137,7 +138,7 @@ namespace Graph.NET.Tests
             for (int i = 0; i < 8; i++)
                 graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
             Assert.That(graph.Vertices.Count(), Is.EqualTo(8));
-            DFSVisitor visitor = new();
+            UndirectedDFSVisitor visitor = new();
             Assert.IsTrue(graph.AddEdge("A", "B"));
             Assert.IsTrue(graph.AddEdge("B", "C"));
             Assert.IsTrue(graph.AddEdge("C", "D"));
@@ -164,7 +165,7 @@ namespace Graph.NET.Tests
             for (int i = 0; i < 3; i++)
                 graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
             Assert.That(graph.Vertices.Count(), Is.EqualTo(3));
-            DFSVisitor visitor = new();
+            UndirectedDFSVisitor visitor = new();
             Assert.IsTrue(graph.AddEdge("A", "B"));
             Assert.IsTrue(graph.AddEdge("B", "C"));
             Assert.IsTrue(graph.AddEdge("C", "A"));
