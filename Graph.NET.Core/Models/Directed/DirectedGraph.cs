@@ -63,8 +63,12 @@ namespace Graph.NET.Core.Models.Directed
 
         public bool AddVertex(IVertex<TValue> vertex)
         {
-            _vertices.Add(vertex);
-            return _vertices.Contains(vertex);
+            if (!_vertices.Contains(vertex))
+            {
+                _vertices.Add(vertex);
+                return _vertices.Contains(vertex);
+            }
+            return false;
         }
 
         public IEnumerable<IVertex<TValue>> AdjacentsTo(IVertex<TValue> vertex)
