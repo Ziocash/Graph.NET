@@ -173,5 +173,34 @@ namespace Graph.NET.Tests
             Assert.IsTrue(graph.CheckCycles());
             Assert.IsTrue(graph.IsCyclic);
         }
+
+        [Test]
+        public void TestConnectedComponents()
+        {
+            for (int i = 0; i < 8; i++)
+                graph.AddVertex(new Vertex<DateTime>() { Name = $"{(char)('A' + i)}", Content = DateTime.Now });
+            Assert.Multiple(() =>
+            {
+                Assert.That(graph.Vertices.Count(), Is.EqualTo(8));
+                Assert.That(graph.AddEdge("A", "B"));
+                Assert.That(graph.AddEdge("B", "C"));
+                Assert.That(graph.AddEdge("C", "D"));
+                Assert.That(graph.AddEdge("D", "F"));
+                Assert.That(graph.AddEdge("F", "E"));
+                Assert.That(graph.AddEdge("H", "E"));
+                Assert.That(graph.AddEdge("A", "G"));
+                Assert.That(graph.AddEdge("G", "C"));
+                Assert.That(graph.AddEdge("D", "H"));
+                Assert.That(graph.AddEdge("B", "H"));
+                Assert.That(graph.AddEdge("G", "F"));
+                Assert.That(graph.Edges.Count(), Is.EqualTo(11));
+            });
+            ConnectedComponentsVisitor visitor = new();
+            graph.AcceptVisitor(visitor);
+            IEnumerable<IVertex<DateTime>[]> connectedComponents = visitor.ConnectedComponents;
+            Assert.That(connectedComponents.Count(), Is.EqualTo(1));
+            foreach(var content in connectedComponents)
+                Assert.That(content.Count(), Is.EqualTo(8));
+        }
     }
 }
