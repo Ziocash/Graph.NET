@@ -144,7 +144,6 @@ namespace Graph.NET.Core.Models.Undirected
             List<IVertex<TValue>> vertices = new();
             foreach (IEdge<TValue> edge in _edges)
             {
-
                 if (edge.Source.Name == vertex.Name)
                     vertices.Add(edge.Destination);
                 if (edge.Destination.Name == vertex.Name)

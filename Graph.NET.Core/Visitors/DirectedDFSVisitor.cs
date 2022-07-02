@@ -18,7 +18,8 @@ namespace Graph.NET.Core.Visitors
 
         public void Visit<TValue>(IDirectedGraph<TValue> graph)
         {
-            DFSVisit(graph, graph.Root);
+            foreach(var vertex in graph.Vertices)
+                DFSVisit(graph, vertex);
         }
 
         private void DFSVisit<TValue>(IDirectedGraph<TValue> graph, IVertex<TValue> vertex)
