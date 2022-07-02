@@ -16,5 +16,8 @@ namespace Graph.NET.Core.Models
 
         VertexColor Color { get; set; }
 
+        int VisitStartTime { get; set; }
+        int VisitEndTime { get; set; }
+
     }
 }

@@ -22,5 +22,7 @@ namespace Graph.NET.Core.Models
         public string? Name { get; set; }
         public TValue? Content { get; set; }
         public VertexColor Color { get; set; } = VertexColor.White;
+        public int VisitStartTime { get; set; }
+        public int VisitEndTime { get; set; }
     }
 }
