@@ -10,6 +10,8 @@ namespace Graph.NET.Core.Models.Directed
 {
     public interface IDirectedGraph<TValue> : IUndirectedGraph<TValue>
     {
+        bool IsDAG { get; }
+
         public void AcceptVisitor(IDirectedGraphVisitor graph);
     }
 }

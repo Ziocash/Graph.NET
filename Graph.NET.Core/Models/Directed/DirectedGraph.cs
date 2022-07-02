@@ -19,6 +19,8 @@ namespace Graph.NET.Core.Models.Directed
 
         public bool IsCyclic => CheckCycles();
 
+        public bool IsDAG => !IsCyclic;
+
         public int MaxEdges => _vertices.Count * (_vertices.Count - 1);
 
         private List<IVertex<TValue>> _vertices;
@@ -103,10 +105,10 @@ namespace Graph.NET.Core.Models.Directed
                     if (CheckCyclesRic(adjacent))
                         return true;
                 }
-                else if (vertex.Name != (parents.Count > 0 ? parents.Last().Name : vertex.Name))
+                else if (adjacent.Color == VertexColor.Gray)
                     return true;
-                adjacent.Color = VertexColor.Black;
             }
+            vertex.Color = VertexColor.Black;
             return false;
         }
 
