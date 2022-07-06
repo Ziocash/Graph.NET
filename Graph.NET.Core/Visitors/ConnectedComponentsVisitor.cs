@@ -19,17 +19,19 @@ namespace Graph.NET.Core.Visitors
 
         public void Visit<TValue>(IUndirectedGraph<TValue> graph)
         {
+            graph.ResetColors();
             List<IVertex<TValue>[]> result = new();
             foreach (var vertex in graph.Vertices)
                 if (vertex.Color == VertexColor.White)
                     result.Add(BuildDFSTree(graph, vertex));
             ConnectedComponents = result.AsEnumerable();
+            graph.ResetColors();
         }
 
         private IVertex<TValue>[] BuildDFSTree<TValue>(IUndirectedGraph<TValue> graph, IVertex<TValue> vertex)
         {
             List<IVertex<TValue>> connectedComponents = new();
-            DFSVisit(graph, graph.Root, connectedComponents);
+            DFSVisit(graph, vertex, connectedComponents);
             return connectedComponents.ToArray();
         }
 
