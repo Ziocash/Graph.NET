@@ -197,8 +197,8 @@ namespace Graph.NET.Tests
             Assert.IsTrue(graph.AddEdge("B", "C"));
             Assert.IsTrue(graph.AddEdge("C", "A"));
             Assert.That(graph.Edges.Count(), Is.EqualTo(3));
-            Assert.IsFalse(graph.CheckCycles());
-            Assert.IsFalse(graph.IsCyclic);
+            Assert.IsTrue(graph.CheckCycles());
+            Assert.IsTrue(graph.IsCyclic);
         }
     }
 }

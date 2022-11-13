@@ -185,22 +185,17 @@ namespace Graph.NET.Tests
                 Assert.That(graph.AddEdge("A", "B"));
                 Assert.That(graph.AddEdge("B", "C"));
                 Assert.That(graph.AddEdge("C", "D"));
-                Assert.That(graph.AddEdge("D", "F"));
                 Assert.That(graph.AddEdge("F", "E"));
                 Assert.That(graph.AddEdge("H", "E"));
-                Assert.That(graph.AddEdge("A", "G"));
-                Assert.That(graph.AddEdge("G", "C"));
-                Assert.That(graph.AddEdge("D", "H"));
-                Assert.That(graph.AddEdge("B", "H"));
                 Assert.That(graph.AddEdge("G", "F"));
-                Assert.That(graph.Edges.Count(), Is.EqualTo(11));
+                Assert.That(graph.Edges.Count(), Is.EqualTo(6));
             });
             ConnectedComponentsVisitor visitor = new();
             graph.AcceptVisitor(visitor);
             IEnumerable<IVertex<DateTime>[]> connectedComponents = visitor.ConnectedComponents;
-            Assert.That(connectedComponents.Count(), Is.EqualTo(1));
+            Assert.That(connectedComponents.Count(), Is.EqualTo(2));
             foreach(var content in connectedComponents)
-                Assert.That(content.Count(), Is.EqualTo(8));
+                Assert.That(content.Length, Is.EqualTo(4));
         }
     }
 }
