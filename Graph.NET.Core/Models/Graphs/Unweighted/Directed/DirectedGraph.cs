@@ -1,5 +1,9 @@
 ﻿using Graph.NET.Core.Exceptions;
-using Graph.NET.Core.Models.Enums;
+using Graph.NET.Core.Models.Graphs.Unweighted.Edges;
+using Graph.NET.Core.Models.Graphs.Unweighted.Undirected;
+using Graph.NET.Core.Models.Graphs.Vertices;
+using Graph.NET.Core.Models.Visits;
+using Graph.NET.Core.Models.Visits.Enums;
 using Graph.NET.Core.Visitors;
 using System;
 using System.Collections.Generic;
@@ -7,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Graph.NET.Core.Models.Directed
+namespace Graph.NET.Core.Models.Graphs.Unweighted.Directed
 {
-    public class DirectedGraph<TValue> : IDirectedGraph<TValue>
+    public class DirectedGraph<TValue> : UndirectedGraph<TValue>
     {
         public IVertex<TValue>? Root => _vertices.FirstOrDefault();
 
@@ -76,7 +80,7 @@ namespace Graph.NET.Core.Models.Directed
         public IEnumerable<IVertex<TValue>> AdjacentsTo(IVertex<TValue> vertex)
         {
             List<IVertex<TValue>> vertices = new();
-            foreach (IEdge<TValue> edge in _edges)            
+            foreach (IEdge<TValue> edge in _edges)
                 if (edge.Source.Name == vertex.Name)
                     vertices.Add(edge.Destination);
             return vertices;
@@ -84,43 +88,43 @@ namespace Graph.NET.Core.Models.Directed
 
         public bool CheckCycles()
         {
-            ResetColors();
+            VisitResult<TValue> visit = new(this, VisitType.DepthFirstSearchTotal);
             foreach (IVertex<TValue> vertex in _vertices)
-                if (vertex.Color == VertexColor.White && CheckCyclesRic(vertex))
+                if (visit.Color(vertex) == VertexColor.White && CheckCyclesRic(vertex, visit))
                     return true;
             return false;
 
         }
 
-        private bool CheckCyclesRic(IVertex<TValue> vertex)
+        private bool CheckCyclesRic(IVertex<TValue> vertex, VisitResult<TValue> visit)
         {
             List<IVertex<TValue>> parents = new();
-            vertex.Color = VertexColor.Gray;
+            visit.Color(vertex, VertexColor.Gray);
 
             foreach (var adjacent in AdjacentsTo(vertex))
             {
-                if (adjacent.Color == VertexColor.White)
+                if (visit.Color(adjacent) == VertexColor.White)
                 {
                     parents.Add(adjacent);
-                    if (CheckCyclesRic(adjacent))
+                    if (CheckCyclesRic(adjacent, visit))
                         return true;
                 }
-                else if (adjacent.Color == VertexColor.Gray)
+                else if (visit.Color(adjacent) == VertexColor.Gray)
                     return true;
             }
-            vertex.Color = VertexColor.Black;
+            visit.Color(vertex, VertexColor.Black);
             return false;
         }
 
-        public bool CutEdges(IVertex<TValue> source)
-        {
-            foreach (IEdge<TValue> edge in _edges)
-                if (edge.Source.Name == source.Name || edge.Destination.Name == source.Name)
-                    return _edges.Remove(edge);
-            return false;
-        }
+        //public new bool CutEdges(IVertex<TValue> source)
+        //{
+        //    foreach (IEdge<TValue> edge in _edges)
+        //        if (edge.Source.Name == source.Name || edge.Destination.Name == source.Name)
+        //            return _edges.Remove(edge);
+        //    return false;
+        //}
 
-        public string PrintGraph()
+        public new string PrintGraph()
         {
             StringBuilder builder = new();
 
@@ -129,7 +133,7 @@ namespace Graph.NET.Core.Models.Directed
             builder.AppendLine("Edges:");
             foreach (IEdge<TValue> edge in _edges)
                 builder.AppendLine($"{edge.Source.Name} --> {edge.Destination.Name}");
-            
+
             builder.AppendLine("Vertices:");
             foreach (IVertex<TValue> vertex in _vertices)
                 builder.AppendLine($"{vertex.Name} - {vertex.Content.ToString()}");
@@ -137,34 +141,28 @@ namespace Graph.NET.Core.Models.Directed
             return builder.ToString();
         }
 
-        public bool RemoveEdge(IVertex<TValue> source, IVertex<TValue> destination) => _edges.Remove(_edges.Find(e => e.Source.Name == source.Name && e.Source.Content.Equals(source.Content) && e.Destination.Name == destination.Name && e.Destination.Content.Equals(destination.Content)));
+        public new bool RemoveEdge(IVertex<TValue> source, IVertex<TValue> destination) => _edges.Remove(_edges.Find(e => e.Source.Name == source.Name && e.Source.Content.Equals(source.Content) && e.Destination.Name == destination.Name && e.Destination.Content.Equals(destination.Content)));
 
-        public bool RemoveEdge(TValue sourceContent, TValue destinationContent) => _edges.Remove(_edges.Find(e => e.Source.Content.Equals(sourceContent) && e.Destination.Content.Equals(destinationContent)));
+        public new bool RemoveEdge(TValue sourceContent, TValue destinationContent) => _edges.Remove(_edges.Find(e => e.Source.Content.Equals(sourceContent) && e.Destination.Content.Equals(destinationContent)));
 
-        public bool RemoveEdge(string sourceName, string destinationName) => _edges.Remove(_edges.Find(e => e.Source.Name == sourceName && e.Destination.Name == destinationName));
+        public new bool RemoveEdge(string sourceName, string destinationName) => _edges.Remove(_edges.Find(e => e.Source.Name == sourceName && e.Destination.Name == destinationName));
 
-        public bool RemoveVertex(IVertex<TValue> vertex)
+        public new bool RemoveVertex(IVertex<TValue> vertex)
         {
             CutEdges(vertex);
             return _vertices.Remove(_vertices.Find(v => v.Name == vertex.Name && v.Content.Equals(vertex.Content)));
         }
 
-        public bool RemoveVertex(string name)
+        public new bool RemoveVertex(string name)
         {
             CutEdges(_vertices.Find(v => v.Name == name));
             return _vertices.Remove(_vertices.Find(v => v.Name == name));
         }
 
-        public bool RemoveVertex(TValue content)
+        public new bool RemoveVertex(TValue content)
         {
             CutEdges(_vertices.Find(v => v.Content.Equals(content)));
             return _vertices.Remove(_vertices.Find(v => v.Content.Equals(content)));
-        }
-
-        public void ResetColors()
-        {
-            foreach (var vertex in _vertices)
-                vertex.Color = VertexColor.White;
         }
     }
 }

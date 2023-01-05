@@ -1,11 +1,10 @@
-﻿using Graph.NET.Core.Visitors;
+﻿using Graph.NET.Core.Models.Graphs.Unweighted.Edges;
+using Graph.NET.Core.Models.Graphs.Vertices;
 
-namespace Graph.NET.Core.Models.Undirected
+namespace Graph.NET.Core.Models.Graphs
 {
-    public interface IUndirectedGraph<TValue>
+    public interface IGraph<TValue>
     {
-        public void ResetColors();
-
         IVertex<TValue>? Root { get; }
 
         IEnumerable<IVertex<TValue>> Vertices { get; }
@@ -33,8 +32,6 @@ namespace Graph.NET.Core.Models.Undirected
         bool CutEdges(IVertex<TValue> source);
 
         string PrintGraph();
-
-        void AcceptVisitor(IUndirectedGraphVisitor visitor);
 
         bool CheckCycles();
 

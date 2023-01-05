@@ -1,9 +1,12 @@
 ﻿using Graph.NET.Core.Exceptions;
-using Graph.NET.Core.Models.Enums;
+using Graph.NET.Core.Models.Graphs.Unweighted.Edges;
+using Graph.NET.Core.Models.Graphs.Vertices;
+using Graph.NET.Core.Models.Visits;
+using Graph.NET.Core.Models.Visits.Enums;
 using Graph.NET.Core.Visitors;
 using System.Text;
 
-namespace Graph.NET.Core.Models.Undirected
+namespace Graph.NET.Core.Models.Graphs.Unweighted.Undirected
 {
     public class UndirectedGraph<TValue> : IUndirectedGraph<TValue>
     {
@@ -111,51 +114,53 @@ namespace Graph.NET.Core.Models.Undirected
 
         public bool CheckCycles()
         {
-            ResetColors();
+            VisitResult<TValue> result = new(this, VisitType.DepthFirstSearch);
             foreach (IVertex<TValue> vertex in _vertices)
-                if (vertex.Color == VertexColor.White && CheckCyclesRic(vertex))
+                if (result.Color(vertex) == VertexColor.White && CheckCyclesRic(vertex, result))
                     return true;
             return false;
 
         }
 
-        private bool CheckCyclesRic(IVertex<TValue> vertex)
+        private bool CheckCyclesRic(IVertex<TValue> vertex, VisitResult<TValue> visit)
         {
+            if (vertex == null)
+                return false;
+
             List<IVertex<TValue>> parents = new();
-            vertex.Color = VertexColor.Gray;
+
+            visit.Color(vertex, VertexColor.Gray);
+            
 
             foreach (var adjacent in AdjacentsTo(vertex))
             {
-                if (adjacent.Color == VertexColor.White)
+                if (visit[adjacent].Color == VertexColor.White)
                 {
                     parents.Add(adjacent);
-                    if (CheckCyclesRic(adjacent))
+                    if (CheckCyclesRic(adjacent, visit))
                         return true;
                 }
                 else if (vertex.Name != (parents.Count > 0 ? parents.Last().Name : vertex.Name))
                     return true;
-                adjacent.Color = VertexColor.Black;
+                visit.Color(adjacent, VertexColor.Black);
             }
             return false;
         }
 
         public IEnumerable<IVertex<TValue>> AdjacentsTo(IVertex<TValue> vertex)
         {
+            if (vertex is null)
+                throw new ArgumentNullException(nameof(vertex), $"Cannot run method {nameof(AdjacentsTo)} with argument null.");
+
             List<IVertex<TValue>> vertices = new();
             foreach (IEdge<TValue> edge in _edges)
             {
-                if (edge.Source.Name == vertex.Name)
-                    vertices.Add(edge.Destination);
-                if (edge.Destination.Name == vertex.Name)
+                if (edge.Source!.Name == vertex.Name)
+                    vertices.Add(edge.Destination!);
+                if (edge.Destination!.Name == vertex.Name)
                     vertices.Add(edge.Source);
             }
             return vertices;
-        }
-
-        public void ResetColors()
-        {
-            foreach (var vertex in _vertices)
-                vertex.Color = VertexColor.White;
         }
     }
 }

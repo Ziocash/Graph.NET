@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Graph.NET.Core.Models.Enums
+namespace Graph.NET.Core.Models.Visits.Enums
 {
     /// <summary>
     /// Vertex color class, used in node visit

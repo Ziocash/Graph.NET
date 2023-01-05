@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Graphs\Weighted\Directed\" />
+    <Folder Include="Models\Graphs\Weighted\Undirected\" />
+  </ItemGroup>
+
 </Project>

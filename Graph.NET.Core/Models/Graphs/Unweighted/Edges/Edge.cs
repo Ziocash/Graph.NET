@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Graph.NET.Core.Models.Graphs.Vertices;
 
-namespace Graph.NET.Core.Models
+namespace Graph.NET.Core.Models.Graphs.Unweighted.Edges
 {
     public class Edge<TValue> : IEdge<TValue>
     {
